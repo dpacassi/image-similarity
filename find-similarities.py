@@ -20,7 +20,7 @@ test_img = cv2.resize(test_img, dim, interpolation=cv2.INTER_AREA)
 data_dir = 'dataset'
 
 for file in os.listdir(data_dir):
-  if file.endswith('.jpg'):
+  if file.endswith('.jpg') and not file.endswith(img):
     img_path = os.path.join(data_dir, file)
     data_img = cv2.imread(img_path)
     resized_img = cv2.resize(data_img, dim, interpolation=cv2.INTER_AREA)
