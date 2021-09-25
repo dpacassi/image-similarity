@@ -3,7 +3,7 @@ import os
 from sys import argv
 from sewar.full_ref import mse, rmse, psnr, uqi, ssim, ergas, scc, rase, sam, msssim, vifp
 
-img = argv[1]
+img = 'dataset/' + argv[1]
 
 test_img = cv2.imread(img)
 
@@ -20,7 +20,7 @@ measures8 = {}
 measures9 = {}
 hist_measures = {}
 
-scale_percent = 20  # percent of original img size
+scale_percent = 10  # percent of original img size
 width = int(test_img.shape[1] * scale_percent / 100)
 height = int(test_img.shape[0] * scale_percent / 100)
 dim = (width, height)
@@ -34,7 +34,7 @@ test_img_hist = cv2.normalize(test_img_hist, test_img_hist).flatten()
 data_dir = 'dataset'
 
 for file in os.listdir(data_dir):
-  if file.endswith('.jpg') and not file.endswith(img):
+  if file.endswith('.jpg') and not file.endswith(os.path.basename(img)):
     img_path = os.path.join(data_dir, file)
     data_img = cv2.imread(img_path)
     resized_img = cv2.resize(data_img, dim, interpolation=cv2.INTER_AREA)
