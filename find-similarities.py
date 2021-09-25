@@ -18,6 +18,7 @@ measures6 = {}
 measures7 = {}
 measures8 = {}
 measures9 = {}
+hist_measures = {}
 
 scale_percent = 20  # percent of original img size
 width = int(test_img.shape[1] * scale_percent / 100)
@@ -27,6 +28,8 @@ dim = (width, height)
 test_img = cv2.resize(test_img, dim, interpolation=cv2.INTER_AREA)
 test_img = cv2.fastNlMeansDenoisingColored(test_img,None,15,15,7,21)
 test_img = cv2.GaussianBlur(test_img, (5, 5), 0)
+test_img_hist = cv2.calcHist(test_img, [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+test_img_hist = cv2.normalize(test_img_hist, test_img_hist).flatten()
 
 data_dir = 'dataset'
 
@@ -37,6 +40,8 @@ for file in os.listdir(data_dir):
     resized_img = cv2.resize(data_img, dim, interpolation=cv2.INTER_AREA)
     resized_img = cv2.fastNlMeansDenoisingColored(resized_img,None,15,15,7,21)
     resized_img = cv2.GaussianBlur(resized_img, (5, 5), 0)
+    resized_img_hist = cv2.calcHist(resized_img, [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+    resized_img_hist = cv2.normalize(resized_img_hist, resized_img_hist).flatten()
 
     ssim_measures[img_path] = ssim(test_img, resized_img)
     rmse_measures[img_path] = rmse(test_img, resized_img)
@@ -49,6 +54,7 @@ for file in os.listdir(data_dir):
     measures7[img_path] = rase(test_img, resized_img)
     measures8[img_path] = sam(test_img, resized_img)
     measures9[img_path] = vifp(test_img, resized_img)
+    hist_measures[img_path] = cv2.compareHist(test_img_hist, resized_img_hist, cv2.HISTCMP_CORREL)
 
 
 def calc_closest_val(dict, checkMax):
@@ -81,6 +87,7 @@ ret_scc = calc_closest_val(measures6, use_max)
 ret_rase = calc_closest_val(measures7, use_max)
 ret_sam = calc_closest_val(measures8, use_max)
 ret_vifp = calc_closest_val(measures9, use_max)
+ret_hist = calc_closest_val(hist_measures, use_max)
 
 print("The most similar according to SSIM: ", ret_ssim)
 print("The most similar according to RMSE: ", ret_rmse)
@@ -92,3 +99,4 @@ print("The most similar according to uqi: ", ret_uqi)
 print("The most similar according to rase: ", ret_rase)
 print("The most similar according to sam: ", ret_sam)
 print("The most similar according to ergas: ", ret_vifp)
+print("The most similar according to histograms: ", ret_hist)
