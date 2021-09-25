@@ -20,7 +20,7 @@ measures8 = {}
 measures9 = {}
 hist_measures = {}
 
-scale_percent = 10  # percent of original img size
+scale_percent = 20  # percent of original img size
 width = int(test_img.shape[1] * scale_percent / 100)
 height = int(test_img.shape[0] * scale_percent / 100)
 dim = (width, height)
