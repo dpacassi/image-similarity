@@ -9,6 +9,9 @@ test_img = cv2.imread(img)
 
 ssim_measures = {}
 rmse_measures = {}
+measures1 = {}
+measures2 = {}
+measures3 = {}
 
 scale_percent = 10  # percent of original img size
 width = int(test_img.shape[1] * scale_percent / 100)
@@ -26,6 +29,9 @@ for file in os.listdir(data_dir):
     resized_img = cv2.resize(data_img, dim, interpolation=cv2.INTER_AREA)
     ssim_measures[img_path] = ssim(test_img, resized_img)
     rmse_measures[img_path] = rmse(test_img, resized_img)
+    measures1[img_path] = mse(test_img, resized_img)
+    measures2[img_path] = msssim(test_img, resized_img)
+    measures3[img_path] = ergas(test_img, resized_img)
 
 
 def calc_closest_val(dict, checkMax):
@@ -36,17 +42,23 @@ def calc_closest_val(dict, checkMax):
     closest = min(dict.values())
 
   for key, value in dict.items():
-    print("The difference between ", key, " and the original image is : \n", value)
+    # print("The difference between ", key, " and the original image is : \n", value)
     if (value == closest):
       result[key] = closest
 
-  print("The closest value: ", closest)
-  print("######################################################################")
+  # print("The closest value: ", closest)
+  # print("######################################################################")
   return result
 
 
 ssim = calc_closest_val(ssim_measures, True)
 rmse = calc_closest_val(rmse_measures, False)
+ret_mse = calc_closest_val(measures1, True)
+ret_msssim = calc_closest_val(measures2, True)
+ret_ergas = calc_closest_val(measures3, True)
 
 print("The most similar according to SSIM: ", ssim)
 print("The most similar according to RMSE: ", rmse)
+print("The most similar according to MSE: ", ret_mse)
+print("The most similar according to msssim: ", ret_msssim)
+print("The most similar according to ergas: ", ret_ergas)
