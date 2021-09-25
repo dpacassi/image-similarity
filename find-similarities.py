@@ -19,13 +19,14 @@ measures7 = {}
 measures8 = {}
 measures9 = {}
 
-scale_percent = 10  # percent of original img size
+scale_percent = 20  # percent of original img size
 width = int(test_img.shape[1] * scale_percent / 100)
 height = int(test_img.shape[0] * scale_percent / 100)
 dim = (width, height)
 
 test_img = cv2.resize(test_img, dim, interpolation=cv2.INTER_AREA)
-# test_img = cv2.fastNlMeansDenoisingColored(test_img,None,15,15,7,21)
+test_img = cv2.fastNlMeansDenoisingColored(test_img,None,15,15,7,21)
+test_img = cv2.GaussianBlur(test_img, (5, 5), 0)
 
 data_dir = 'dataset'
 
@@ -34,7 +35,9 @@ for file in os.listdir(data_dir):
     img_path = os.path.join(data_dir, file)
     data_img = cv2.imread(img_path)
     resized_img = cv2.resize(data_img, dim, interpolation=cv2.INTER_AREA)
-    # resized_img = cv2.fastNlMeansDenoisingColored(resized_img,None,15,15,7,21)
+    resized_img = cv2.fastNlMeansDenoisingColored(resized_img,None,15,15,7,21)
+    resized_img = cv2.GaussianBlur(resized_img, (5, 5), 0)
+
     ssim_measures[img_path] = ssim(test_img, resized_img)
     rmse_measures[img_path] = rmse(test_img, resized_img)
     measures1[img_path] = mse(test_img, resized_img)
@@ -67,8 +70,8 @@ def calc_closest_val(dict, checkMax):
 
 use_max = True
 
-ssim = calc_closest_val(ssim_measures, use_max)
-rmse = calc_closest_val(rmse_measures, use_max)
+ret_ssim = calc_closest_val(ssim_measures, use_max)
+ret_rmse = calc_closest_val(rmse_measures, use_max)
 ret_mse = calc_closest_val(measures1, use_max)
 ret_msssim = calc_closest_val(measures2, use_max)
 ret_ergas = calc_closest_val(measures3, use_max)
@@ -79,8 +82,8 @@ ret_rase = calc_closest_val(measures7, use_max)
 ret_sam = calc_closest_val(measures8, use_max)
 ret_vifp = calc_closest_val(measures9, use_max)
 
-print("The most similar according to SSIM: ", ssim)
-print("The most similar according to RMSE: ", rmse)
+print("The most similar according to SSIM: ", ret_ssim)
+print("The most similar according to RMSE: ", ret_rmse)
 print("The most similar according to MSE: ", ret_mse)
 print("The most similar according to msssim: ", ret_msssim)
 print("The most similar according to ergas: ", ret_ergas)
