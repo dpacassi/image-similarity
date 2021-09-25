@@ -19,11 +19,12 @@ dim = (width, height)
 data_dir = 'dataset'
 
 for file in os.listdir(data_dir):
-  img_path = os.path.join(data_dir, file)
-  data_img = cv2.imread(img_path)
-  resized_img = cv2.resize(data_img, dim, interpolation=cv2.INTER_AREA)
-  ssim_measures[img_path] = ssim(test_img, resized_img)
-  rmse_measures[img_path] = rmse(test_img, resized_img)
+  if file.endswith('.jpg'):
+    img_path = os.path.join(data_dir, file)
+    data_img = cv2.imread(img_path)
+    resized_img = cv2.resize(data_img, dim, interpolation=cv2.INTER_AREA)
+    ssim_measures[img_path] = ssim(test_img, resized_img)
+    rmse_measures[img_path] = rmse(test_img, resized_img)
 
 
 def calc_closest_val(dict, checkMax):
