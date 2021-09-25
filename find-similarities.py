@@ -9,12 +9,13 @@ test_img = cv2.imread(img)
 
 ssim_measures = {}
 rmse_measures = {}
-sre_measures = {}
 
-scale_percent = 100  # percent of original img size
+scale_percent = 10  # percent of original img size
 width = int(test_img.shape[1] * scale_percent / 100)
 height = int(test_img.shape[0] * scale_percent / 100)
 dim = (width, height)
+
+test_img = cv2.resize(test_img, dim, interpolation=cv2.INTER_AREA)
 
 data_dir = 'dataset'
 
@@ -46,8 +47,6 @@ def calc_closest_val(dict, checkMax):
 
 ssim = calc_closest_val(ssim_measures, True)
 rmse = calc_closest_val(rmse_measures, False)
-sre = calc_closest_val(sre_measures, True)
 
 print("The most similar according to SSIM: ", ssim)
 print("The most similar according to RMSE: ", rmse)
-print("The most similar according to SRE: ", sre)
